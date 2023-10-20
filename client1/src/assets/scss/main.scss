@@ -1,0 +1,35 @@
+//Colors
+$background-color-main: hsla(267, 15%, 12%, 0.247);
+$background-color-tertiary: hsla(0, 0%, 96%, 0.1);
+$background-color-secondary: #171717;
+$font-color-main: whitesmoke;
+$theme-color: #3282b8;
+$theme-color2: #0f4c75;
+$theme-color3: #bbe1fa;
+$hover-color: wheat;
+$red: #d70040;
+$yellow: #e4d00a;
+$max-width: 1000px;
+$min-width: 650px;
+
+@mixin theme {
+    background-color: $background-color-main;
+    color: $font-color-main;
+}
+
+@mixin glassmorphism {
+    position: relative;
+    box-shadow: 20px 20px 50px rgba(44, 42, 42, 0.5);
+    background-color: $background-color-main;
+    overflow: hidden;
+    border-left: 1px solid rgba(255, 255, 255, 0.5);
+    border-right: 1px solid rgba(255, 255, 255, 0.5);
+    z-index: 1;
+    backdrop-filter: blur(5px);
+}
+
+.center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
