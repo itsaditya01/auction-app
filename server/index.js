@@ -1,14 +1,14 @@
 const express = require("express");
-const http = require('http')
+const http = require("http");
 const app = express();
 const { connectToMongo } = require("./src/database/connection");
 const errorhandler = require("./src/utils/errorHandler");
 const morgan = require("morgan");
 const cors = require("cors");
+const socketConnection = require("./src/socket/socketConfig");
 
 const server = http.createServer(app);
-
-
+socketConnection(server);
 //middlewares
 app.use(express.json());
 app.use(cors());

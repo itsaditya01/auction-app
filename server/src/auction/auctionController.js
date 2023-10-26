@@ -3,10 +3,9 @@ const {
   addAuction,
   fetchAllAuction,
   fetchAuctionDetails,
+  getAllPurchases,
+  updateBuyer,
 } = require("./auctionService");
-
-const secret = process.env.JWT_SECRET;
-const tokenLife = process.env.TOKEN_LIFE;
 
 function convertUTCDateToLocalDate(date) {
   var newDate = new Date(date.getTime() + date.getTimezoneOffset() * 60 * 1000);
@@ -22,13 +21,6 @@ function convertUTCDateToLocalDate(date) {
 exports.createAuction = async (req, res, next) => {
   const session = await conn.startSession();
   try {
-    // const {
-    //   itemName,
-    //   itemDescription,
-    //   startingPrice,
-    //   startTime,
-    //   endTime,
-    // } = req.body;
     session.startTransaction();
 
     const auction = await addAuction({ ...req.body, addedBy: req.user });
@@ -100,6 +92,36 @@ exports.getAuctionDetails = async (req, res, next) => {
       data: {
         auctionData,
       },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+exports.getPurchasesList = async (req, res, next) => {
+  try {
+    const purchasesList = await getAllPurchases(req.user);
+    res.status(200).json({
+      success: true,
+      data: {
+        purchasesList,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+exports.updateBuyer = async (req, res, next) => {
+  try {
+    const auctionId = req.params.id;
+    const soldTo = req.body.soldTo;
+    const auction = await updateBuyer(auctionId, soldTo);
+
+    res.status(200).json({
+      success: true,
+      auction,
+      msg: "Auction ended successfully",
     });
   } catch (error) {
     next(error);
