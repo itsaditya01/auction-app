@@ -11,6 +11,7 @@ const server = http.createServer(app);
 socketConnection(server);
 //middlewares
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 
 require("dotenv").config();

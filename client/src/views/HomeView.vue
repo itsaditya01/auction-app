@@ -26,12 +26,4 @@ export default {
 </script>
 
 <style scoped>
-#app {
-  /*background: url(https://images.unsplash.com/photo-1551970634-747846a548cb?ixlib)
-    center/cover no-repeat;*/
-  background: linear-gradient(120deg, #1d976c, #2c3e50);
-  height: 100%;
-  overflow: hidden;
-  z-index: 1;
-}
 </style>

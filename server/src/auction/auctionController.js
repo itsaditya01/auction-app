@@ -1,4 +1,6 @@
 const { conn } = require("../database/connection");
+const fs = require("fs");
+const path = require("path");
 const {
   addAuction,
   fetchAllAuction,
@@ -22,8 +24,33 @@ exports.createAuction = async (req, res, next) => {
   const session = await conn.startSession();
   try {
     session.startTransaction();
+    const {
+      itemName,
+      itemDescription,
+      startingPrice,
+      startingTime,
+      startingDate,
+      endingTime,
+      endingDate,
+    } = req.body;
 
-    const auction = await addAuction({ ...req.body, addedBy: req.user });
+    const startTime = new Date(startingDate + "T" + startingTime);
+    const endTime = new Date(endingDate + "T" + endingTime);
+    const obj = {
+      itemName,
+      itemDescription,
+      startingPrice,
+      startTime,
+      endTime,
+      itemPhoto: {
+        data: fs.readFileSync(
+          path.join(process.cwd() + "/uploads/" + req.file.filename)
+        ),
+        contentType: req.file.mimetype,
+      },
+    };
+    console.log(obj.itemPhoto);
+    const auction = await addAuction({ ...obj, addedBy: req.user });
     await session.commitTransaction();
 
     res.status(201).json({

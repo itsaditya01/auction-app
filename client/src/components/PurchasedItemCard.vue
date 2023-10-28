@@ -1,17 +1,22 @@
 <template>
   <v-card class="main-card" width="344">
     <v-img
+      v-if="!item.itemPhoto"
       src="https://cdn.vuetifyjs.com/images/cards/sunshine.jpg"
       height="200px"
       cover
     ></v-img>
 
-    <v-card-title> Top western road trips </v-card-title>
+    <img v-if="item.itemPhoto" height="200" :src="image" />
+
+    <v-card-title> {{ item.itemName }} </v-card-title>
 
     <v-card-subtitle> from name </v-card-subtitle>
 
     <v-card-text>
-      <div class="text-subtitle-2">Purchased price $100</div>
+      <div class="text-subtitle-2">
+        Purchased price ${{ item.sellingPrice }}
+      </div>
     </v-card-text>
     <v-card-actions>
       <v-btn color="orange-lighten-2" variant="text"> Explore </v-btn>
@@ -29,11 +34,7 @@
         <v-divider></v-divider>
 
         <v-card-text>
-          I'm a thing. But, like most politicians, he promised more than he
-          could deliver. You won't have time for sleeping, soldier, not with all
-          the bed making you'll be doing. Then we'll go with that data file!
-          Hey, you add a one and two zeros to that or we walk! You're going to
-          do his laundry? I've got to find a way to escape.
+          {{ item.itemDescription }}
         </v-card-text>
       </div>
     </v-expand-transition>
@@ -44,7 +45,24 @@
 export default {
   data: () => ({
     show: false,
+    image: null,
   }),
+  props: ["item"],
+  created() {
+    if (this.item.itemPhoto) {
+      var base64Flag = "data:" + this.item.itemPhoto.contentType + ";base64,";
+      var imageStr = this.arrayBufferToBase64(this.item.itemPhoto.data.data);
+      this.image = base64Flag + imageStr;
+    }
+  },
+  methods: {
+    arrayBufferToBase64(buffer) {
+      var binary = "";
+      var bytes = [].slice.call(new Uint8Array(buffer));
+      bytes.forEach((b) => (binary += String.fromCharCode(b)));
+      return window.btoa(binary);
+    },
+  },
 };
 </script>
 

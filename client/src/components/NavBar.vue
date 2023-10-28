@@ -21,7 +21,14 @@
             <span class="white underline_right"></span>
           </router-link>
         </div>
-        <div class="action_btn"><button class="btn">Logout</button></div>
+        <div class="d-flex">
+          <div class="action_btn me-3">
+            <router-link to="/add-auction" class="btn">Add Auction</router-link>
+          </div>
+          <div class="action_btn" @click="logout">
+            <button class="btn">Logout</button>
+          </div>
+        </div>
       </v-container>
     </nav>
     <nav class="my_nav d-block d-md-none p-3">
@@ -45,7 +52,7 @@
             <span class="white underline_right"></span>
           </router-link>
         </div>
-        <div class="action_btn">
+        <div class="action_btn" @click="logout">
           <v-btn fab small><v-icon>mdi mdi-logout</v-icon></v-btn>
         </div>
       </v-container>
@@ -77,11 +84,16 @@ export default {
       ],
     };
   },
+  methods: {
+    logout() {
+      this.$cookies.remove("token");
+      this.$router.push("/auth");
+    },
+  },
 };
 </script>
 
 <style scoped>
-@import url("https://fonts.cdnfonts.com/css/event-horizon");
 * {
   margin: 0;
   padding: 0;

@@ -8,6 +8,7 @@ exports.addAuction = async ({
   addedBy,
   startTime,
   endTime,
+  itemPhoto,
 }) => {
   try {
     const auction = new Auction({
@@ -17,6 +18,7 @@ exports.addAuction = async ({
       addedBy,
       startTime,
       endTime,
+      itemPhoto,
     });
     await auction.save();
     return auction;

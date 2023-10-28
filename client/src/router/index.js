@@ -3,8 +3,11 @@ import HomeView from "../views/HomeView.vue";
 import AuthView from "../views/AuthView.vue";
 import PurchaseView from "../views/PurchaseView.vue";
 import AuctionListView from "../views/AuctionListView.vue";
+import AddAuctionView from "../views/AddAuctionView.vue";
+import AuctionView from "../views/AuctionView.vue";
 
 const routes = [
+  { path: "/", redirect: "/auctions" },
   {
     path: "/",
     name: "home",
@@ -15,21 +18,26 @@ const routes = [
         path: "/purchases",
         component: PurchaseView,
       },
+      {
+        path: "/add-auction",
+        component: AddAuctionView,
+      },
+      {
+        path: "/about",
+        name: "about",
+        component: function () {
+          return import("../views/AboutView.vue");
+        },
+      },
     ],
+  },
+  {
+    path: "/auction/:id",
+    component: AuctionView,
   },
   {
     path: "/auth",
     component: AuthView,
-  },
-  {
-    path: "/about",
-    name: "about",
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: function () {
-      return import(/* webpackChunkName: "about" */ "../views/AboutView.vue");
-    },
   },
 ];
 
