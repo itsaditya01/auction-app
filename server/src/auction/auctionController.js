@@ -111,7 +111,6 @@ exports.getAuctionList = async (req, res, next) => {
 exports.getAuctionDetails = async (req, res, next) => {
   try {
     const auctionId = req.params.id;
-
     const auctionData = await fetchAuctionDetails(auctionId);
 
     res.status(200).json({

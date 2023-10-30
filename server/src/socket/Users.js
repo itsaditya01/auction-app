@@ -24,7 +24,7 @@ const addUser = ({ id, userId, username, room }) => {
   //store user
   const user = { id, userId, username, room };
   users.push(user);
-
+  console.log(users);
   return { user };
 };
 

@@ -13,7 +13,12 @@ const routes = [
     name: "home",
     component: HomeView,
     children: [
-      { path: "/auctions", component: AuctionListView },
+      {
+        path: "/auction/:id",
+        name: "AuctionView",
+        component: AuctionView,
+      },
+      { path: "/auctions", name: "AuctionList", component: AuctionListView },
       {
         path: "/purchases",
         component: PurchaseView,
@@ -31,10 +36,7 @@ const routes = [
       },
     ],
   },
-  {
-    path: "/auction/:id",
-    component: AuctionView,
-  },
+
   {
     path: "/auth",
     component: AuthView,

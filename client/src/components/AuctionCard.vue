@@ -55,8 +55,8 @@
     </div>
 
     <v-card-actions>
-      <v-btn color="deep-purple-lighten-2" variant="text" @click="reserve">
-        Know more
+      <v-btn color="deep-purple-lighten-2" variant="text">
+        <router-link :to="'/auction/' + auction._id"> Know more </router-link>
       </v-btn>
     </v-card-actions>
   </v-card>

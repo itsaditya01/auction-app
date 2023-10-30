@@ -4,9 +4,10 @@
     :style="{ backgroundImage: 'url(' + require('@/assets/bg5.jpg') + ')' }"
   >
     <NavBar></NavBar>
-    <v-container>
+    <v-container v-if="$route.name !== 'AuctionView'">
       <router-view></router-view>
     </v-container>
+    <router-view v-else></router-view>
   </v-app>
 </template>
 

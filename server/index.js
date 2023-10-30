@@ -8,7 +8,6 @@ const cors = require("cors");
 const socketConnection = require("./src/socket/socketConfig");
 
 const server = http.createServer(app);
-socketConnection(server);
 //middlewares
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -42,6 +41,7 @@ const startServer = async () => {
     server.listen(port, () => {
       console.log("Server is listening to port 3000!");
     });
+    socketConnection(server);
   } catch (error) {
     console.log("Error in connecting database.", error);
   }

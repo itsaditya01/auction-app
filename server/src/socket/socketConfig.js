@@ -2,10 +2,13 @@ const { getUser, addUser, getUsersInRoom, removeUser } = require("./Users");
 const { generateMessage, generateBid } = require("./Message");
 const http = require("http");
 const { addBid } = require("../bidding/bidService");
-const socketio = require("socket.io");
 
 const socketConnection = (server) => {
-  const io = socketio(server);
+  const io = require("socket.io")(server, {
+    cors: {
+      origin: "*",
+    },
+  });
 
   //socket events
   io.on("connection", (socket) => {
@@ -14,8 +17,6 @@ const socketConnection = (server) => {
     //to create or join room
     socket.on("join", (options, callback) => {
       const { error, user } = addUser({ id: socket.id, ...options });
-      console.log(error);
-      console.log(user);
       if (error) {
         return callback(error);
       }

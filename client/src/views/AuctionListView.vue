@@ -63,7 +63,7 @@ export default {
           }
         })
         .catch((error) => {
-          this.$toast.error(error.response.data.msg);
+          this.$toast.error(error.message);
         });
     },
   },

@@ -1,5 +1,9 @@
 const { conn } = require("../database/connection");
-const { addBid, getBidByAuctionId } = require("./bidService");
+const {
+  addBid,
+  getBidByAuctionId,
+  getUsersByAuctionId,
+} = require("./bidService");
 
 exports.bid = async (req, res, next) => {
   try {
@@ -28,6 +32,21 @@ exports.getBids = async (req, res, next) => {
       success: true,
       data: {
         bidsData,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+exports.getUsersWhoBidded = async (req, res, next) => {
+  try {
+    const usersList = await getUsersByAuctionId(req.params.id);
+
+    res.status(200).json({
+      success: true,
+      data: {
+        usersList,
       },
     });
   } catch (error) {
