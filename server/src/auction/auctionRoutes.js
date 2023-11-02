@@ -6,6 +6,7 @@ const {
   getAuctionDetails,
   getPurchasesList,
   updateBuyer,
+  getAuctionByUserId,
 } = require("./auctionController");
 const verifytoken = require("../middlewares/verifytoken");
 const upload = require("../config/multer");
@@ -13,6 +14,7 @@ const upload = require("../config/multer");
 const router = express.Router();
 
 router.get("/", getAuctionList);
+router.get('/my-auctions', verifytoken, getAuctionByUserId)
 router.post(
   "/create",
   verifytoken,

@@ -1,8 +1,9 @@
 import axios from "axios";
 import VueCookies from "vue-cookies";
 
+const serverUrl = process.env.VUE_APP_SERVER_URL;
 const api = axios.create({
-  baseURL: "http://localhost:3000/api/",
+  baseURL: serverUrl,
 });
 
 // Add a request interceptor

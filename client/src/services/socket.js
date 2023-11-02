@@ -6,11 +6,16 @@ export const state = reactive({
   users: [],
   messages: [],
   bids: [],
+  setUsers(userList) {
+    this.users = userList;
+  },
 });
 
 // "undefined" means the URL will be computed from the `window.location` object
 const URL =
-  process.env.NODE_ENV === "production" ? undefined : "http://localhost:3000";
+  process.env.NODE_ENV === "production"
+    ? undefined
+    : "http://192.1.200.35:3022";
 
 export const socket = io(URL, { autoConnect: false });
 
@@ -29,9 +34,4 @@ socket.on("getUsersInRoom", ({ room, users }) => {
 
 socket.on("message", (message) => {
   state.messages.push(message);
-});
-
-socket.on("bid", (bid) => {
-  state.bids.push(bid);
-  console.log(state.bids);
 });

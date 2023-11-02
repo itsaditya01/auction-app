@@ -77,17 +77,20 @@ export default {
           title: "Purchases",
         },
         {
-          url: "/about",
+          url: "/my-auctions",
           icon: "mdi mdi-information-outline",
-          title: "About",
+          title: "My Auction",
         },
       ],
     };
   },
   methods: {
     logout() {
+      this.$cookies.remove();
       this.$cookies.remove("token");
-      this.$router.push("/auth");
+      this.$cookies.remove("username");
+      this.$cookies.remove("id");
+      this.$router.push("/");
     },
   },
 };

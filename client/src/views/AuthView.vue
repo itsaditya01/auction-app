@@ -124,18 +124,31 @@ export default {
   },
   methods: {
     async login() {
-      const result = (await userApi.loginUser(this.loginCredentials)).data;
-      console.log(result);
-      if (result.success) {
-        this.$cookies.set("token", result.data.token);
-        this.$router.push("/");
+      try {
+        const result = (await userApi.loginUser(this.loginCredentials)).data;
+        console.log(result);
+        if (result.success) {
+          this.$cookies.set("token", result.data.token);
+          this.$cookies.set("id", result.data.id);
+          this.$cookies.set("username", result.data.username);
+          this.$router.push("/home");
+        }
+      } catch (error) {
+        console.log(error);
+        this.$toast.error(error.response?.data.msg || error.message);
       }
     },
     async signup() {
-      const result = await userApi.signupUser(this.signupCredentials);
-      if (result.success) {
-        this.$cookies.set("token", result.data.token);
-        this.$router.push("/");
+      try {
+        const result = await userApi.signupUser(this.signupCredentials);
+        if (result.data.success) {
+          this.$cookies.set("token", result.data.token);
+          this.$cookies.set("id", result.data.id);
+          this.$cookies.set("username", result.data.username);
+          this.$router.push("/home");
+        }
+      } catch (error) {
+        this.$toast.error(error.response?.data.msg || error.message);
       }
     },
   },

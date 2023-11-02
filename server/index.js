@@ -6,6 +6,7 @@ const errorhandler = require("./src/utils/errorHandler");
 const morgan = require("morgan");
 const cors = require("cors");
 const socketConnection = require("./src/socket/socketConfig");
+const scheduleAuctionTasks = require("./src/helpers/cron");
 
 const server = http.createServer(app);
 //middlewares
@@ -15,7 +16,7 @@ app.use(cors());
 
 require("dotenv").config();
 
-const port = 3000 || process.env.PORT;
+const port = 3022 || process.env.PORT;
 
 app.use(
   morgan(":method :url :status :res[content-length] - :response-time ms")
@@ -41,6 +42,7 @@ const startServer = async () => {
     server.listen(port, () => {
       console.log("Server is listening to port 3000!");
     });
+    scheduleAuctionTasks();
     socketConnection(server);
   } catch (error) {
     console.log("Error in connecting database.", error);

@@ -39,16 +39,14 @@ const socketConnection = (server) => {
       callback();
     });
 
-    socket.on("sendBid", async (bidAmount, callback) => {
+    socket.on("sendBid", (bidAmount, callback) => {
       const user = getUser(socket.id);
 
       if (!user) {
         return callback("user is not registered");
       }
 
-      await addBid(user.userId, user.room, bidAmount);
-
-      io.to(user.room).emit("bid", generateBid(user.username, bidAmount));
+      socket.broadcast.to(user.room).emit("bid", generateBid(user.username, user.userId, bidAmount));
       callback();
     });
 

@@ -5,11 +5,12 @@ import PurchaseView from "../views/PurchaseView.vue";
 import AuctionListView from "../views/AuctionListView.vue";
 import AddAuctionView from "../views/AddAuctionView.vue";
 import AuctionView from "../views/AuctionView.vue";
+import MyAuctionView from "../views/MyAuctionView.vue";
 
 const routes = [
-  { path: "/", redirect: "/auctions" },
+  { path: "/home", redirect: "/auctions" },
   {
-    path: "/",
+    path: "/home",
     name: "home",
     component: HomeView,
     children: [
@@ -28,17 +29,15 @@ const routes = [
         component: AddAuctionView,
       },
       {
-        path: "/about",
-        name: "about",
-        component: function () {
-          return import("../views/AboutView.vue");
-        },
+        path: "/my-auctions",
+        name: "my-auctions",
+        component: MyAuctionView,
       },
     ],
   },
 
   {
-    path: "/auth",
+    path: "/",
     component: AuthView,
   },
 ];
@@ -46,6 +45,14 @@ const routes = [
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes,
+});
+
+router.beforeEach(function (to, _, next) {
+  if (to.path === "/" && $cookies.get("token")) {
+    next("/home");
+  } else {
+    next();
+  }
 });
 
 export default router;

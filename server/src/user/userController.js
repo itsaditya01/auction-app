@@ -38,7 +38,11 @@ exports.Login = async (req, res, next) => {
         } else {
           return res.status(200).json({
             success: true,
-            data: { token },
+            data: {
+              token,
+              username: user.firstName + " " + user.lastName,
+              id: user._id,
+            },
           });
         }
       }
@@ -51,21 +55,14 @@ exports.Login = async (req, res, next) => {
 exports.Signup = async (req, res, next) => {
   const session = await conn.startSession();
   try {
-    const { firstName, lastName, email, password, contactNo, profilePhoto } =
-      req.body;
+    const { fname, lname, email, password, contactNo } = req.body;
+    console.log(req.body);
     const hashedPass = await bcrypt.hash(password, 10);
 
     session.startTransaction();
 
     //Add user
-    const user = await addUser(
-      firstName,
-      lastName,
-      email,
-      hashedPass,
-      contactNo,
-      profilePhoto
-    );
+    const user = await addUser(fname, lname, email, hashedPass, contactNo);
 
     console.log(user);
 
@@ -81,6 +78,7 @@ exports.Signup = async (req, res, next) => {
       data: {
         token,
         id: user._id,
+        username: fname + " " + lname,
       },
     });
   } catch (error) {

@@ -5,6 +5,11 @@
       <v-tab value="upcomingAuctions">Upcoming</v-tab>
       <v-tab value="completedAuctions">recent</v-tab>
     </v-tabs>
+    <div v-if="loading" class="loading">
+      <div class="loadingio-spinner-eclipse-afh6smwet9o">
+        <div class="ldio-hdy9ozyx8eu"><div></div></div>
+      </div>
+    </div>
     <v-window v-model="tab">
       <v-window-item
         v-for="n in ['liveAuctions', 'upcomingAuctions', 'completedAuctions']"
@@ -46,6 +51,7 @@ export default {
   data() {
     return {
       tab: "liveAuctions",
+      loading: false,
       auctions: [],
     };
   },
@@ -54,16 +60,21 @@ export default {
   },
   methods: {
     async getAuctionList() {
+      this.loading = true;
       auctionApi
         .getAuctionList()
         .then((result) => {
           if (result.data.success) {
             this.auctions = result.data.data.auctionData;
+
             console.log(this.auctions);
           }
         })
         .catch((error) => {
           this.$toast.error(error.message);
+        })
+        .finally(() => {
+          this.loading = false;
         });
     },
   },

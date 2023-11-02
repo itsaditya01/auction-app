@@ -9,14 +9,7 @@ exports.getUserByEmail = async (email) => {
   }
 };
 
-exports.addUser = async (
-  firstName,
-  lastName,
-  email,
-  password,
-  contactNo,
-  profilePhoto
-) => {
+exports.addUser = async (firstName, lastName, email, password, contactNo) => {
   try {
     //Create User
     const user = new User({
@@ -25,7 +18,6 @@ exports.addUser = async (
       email,
       password,
       contactNo,
-      profilePhoto,
     });
     await user.save();
     return user;

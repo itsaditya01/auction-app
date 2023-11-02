@@ -29,7 +29,7 @@ exports.addAuction = async ({
 
 exports.fetchAllAuction = async () => {
   try {
-    const auctions = await Auction.find({});
+    const auctions = await Auction.find({}).sort({ endTime: -1 });
     return auctions;
   } catch (error) {
     throw error;
@@ -57,11 +57,26 @@ exports.getAllPurchases = async (userId) => {
   }
 };
 
-exports.updateBuyer = async (auctionId, userId) => {
+exports.updateBuyer = async (auctionId, userId, sellingPrice) => {
   try {
     const result = await Auction.findByIdAndUpdate(auctionId, {
-      soldTo: new mongoose.mongo.ObjectId(userId),
+      $set: {
+        soldTo: new mongoose.mongo.ObjectId(userId),
+        sellingPrice,
+      },
     });
+    return;
+  } catch (error) {
+    throw error;
+  }
+};
+
+exports.getAuctionsByUser = async (userId) => {
+  try {
+    const result = await Auction.find({
+      addedBy: new mongoose.Types.ObjectId(userId),
+    }).sort({ created_at: -1 });
+    return result;
   } catch (error) {
     throw error;
   }

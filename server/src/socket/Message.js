@@ -6,13 +6,13 @@ const generateMessage = (username, msg) => {
   };
 };
 
-const generateBid = (username, bidAmount) => {
+const generateBid = (username, userId, bidAmount) => {
   return {
     username,
     bidAmount,
+    userId,
     createdAt: new Date().getTime(),
   };
 };
-
 
 module.exports = { generateMessage, generateBid };

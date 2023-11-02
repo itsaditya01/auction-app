@@ -1,13 +1,20 @@
 <template>
   <div id="auctionDetails">
-    <v-img
-      v-if="!auction.itemPhoto"
-      cover
-      height="250"
-      src="https://cdn.vuetifyjs.com/images/cards/cooking.png"
-    ></v-img>
+    <div class="text-center image-container">
+      <v-img
+        v-if="!auction.itemPhoto"
+        cover
+        height="450"
+        src="https://cdn.vuetifyjs.com/images/cards/cooking.png"
+      ></v-img>
 
-    <img v-if="auction.itemPhoto" height="250" :src="image" />
+      <img v-if="image" style="max-width: 100%; height: 450px" :src="image" />
+      <img
+        v-if="!isLive"
+        :src="require('../assets/sold_image.png')"
+        class="sold-image"
+      />
+    </div>
 
     <v-card-item>
       <v-card-title>{{ auction.itemName }}</v-card-title>
@@ -34,13 +41,13 @@
     <div class="px-4">
       <v-chip-group v-model="selection">
         <v-chip
-          >{{ auction.startTime?.split("T")[0] }}
-          {{ auction.startTime?.split("T")[1].slice(0, 5) }}</v-chip
+          >{{ startTime?.split("T")[0] }}
+          {{ startTime?.split("T")[1].slice(0, 5) }}</v-chip
         >
         <div class="text-center me-1 d-flex align-center">to</div>
         <v-chip
-          >{{ auction.endTime?.split("T")[0] }}
-          {{ auction.endTime?.split("T")[1].slice(0, 5) }}</v-chip
+          >{{ endTime?.split("T")[0] }}
+          {{ endTime?.split("T")[1].slice(0, 5) }}</v-chip
         >
       </v-chip-group>
     </div>
@@ -54,29 +61,28 @@ export default {
       image: null,
     };
   },
-  props: ["auction"],
   created() {
-    console.log(this.auction);
-    if (this.auction.itemPhoto) {
-      var base64Flag =
-        "data:" + this.auction.itemPhoto.contentType + ";base64,";
-      var imageStr = this.arrayBufferToBase64(this.auction.itemPhoto.data.data);
-      this.image = base64Flag + imageStr;
-    }
+    console.log(this.isLive);
   },
-  methods: {
-    arrayBufferToBase64(buffer) {
-      var binary = "";
-      var bytes = [].slice.call(new Uint8Array(buffer));
-      bytes.forEach((b) => (binary += String.fromCharCode(b)));
-      return window.btoa(binary);
-    },
-  },
+  props: ["auction", "image", "isLive", "startTime", "endTime"],
 };
 </script>
 
 <style scoped>
 #auctionDetails {
-    color: white;
+  color: white;
+}
+
+.sold-image {
+  position: absolute;
+  top: 0;
+  height: 400px;
+}
+
+.image-container {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  height: 450px;
 }
 </style>

@@ -7,12 +7,23 @@ const {
   fetchAuctionDetails,
   getAllPurchases,
   updateBuyer,
+  getAuctionsByUser,
 } = require("./auctionService");
 
 function convertUTCDateToLocalDate(date) {
   var newDate = new Date(date.getTime() + date.getTimezoneOffset() * 60 * 1000);
-
   var offset = date.getTimezoneOffset() / 60;
+  var hours = date.getHours();
+
+  newDate.setHours(hours - offset);
+
+  return newDate;
+}
+
+function getCurrentDatetoLocalDate() {
+  const date = new Date(Date.now());
+  var newDate = new Date(date.getTime() + date.getTimezoneOffset() * 60 * 1000);
+  var offset = -5.3;
   var hours = date.getHours();
 
   newDate.setHours(hours - offset);
@@ -49,7 +60,6 @@ exports.createAuction = async (req, res, next) => {
         contentType: req.file.mimetype,
       },
     };
-    console.log(obj.itemPhoto);
     const auction = await addAuction({ ...obj, addedBy: req.user });
     await session.commitTransaction();
 
@@ -67,10 +77,11 @@ exports.getAuctionList = async (req, res, next) => {
   try {
     const auctionList = await fetchAllAuction();
 
-    const currentDate = convertUTCDateToLocalDate(new Date());
+    const currentDate = getCurrentDatetoLocalDate();
     auctions = auctionList.map((auction) => {
       auction.startTime = convertUTCDateToLocalDate(auction.startTime);
       auction.endTime = convertUTCDateToLocalDate(auction.endTime);
+      console.log(auction.startTime);
       return auction;
     });
 
@@ -113,10 +124,17 @@ exports.getAuctionDetails = async (req, res, next) => {
     const auctionId = req.params.id;
     const auctionData = await fetchAuctionDetails(auctionId);
 
+    const currentDate = getCurrentDatetoLocalDate();
+    const startTime = convertUTCDateToLocalDate(auctionData.startTime);
+    const endTime = convertUTCDateToLocalDate(auctionData.endTime);
+
     res.status(200).json({
       success: true,
       data: {
         auctionData,
+        currentDate,
+        endTime,
+        startTime,
       },
     });
   } catch (error) {
@@ -141,13 +159,30 @@ exports.getPurchasesList = async (req, res, next) => {
 exports.updateBuyer = async (req, res, next) => {
   try {
     const auctionId = req.params.id;
-    const soldTo = req.body.soldTo;
-    const auction = await updateBuyer(auctionId, soldTo);
+    const { soldTo, sellingPrice } = req.body;
+    const auction = await updateBuyer(auctionId, soldTo, sellingPrice);
 
     res.status(200).json({
       success: true,
       auction,
       msg: "Auction ended successfully",
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+exports.getAuctionByUserId = async (req, res, next) => {
+  try {
+    const userId = req.user;
+
+    const auctionData = await getAuctionsByUser(userId);
+
+    res.status(200).json({
+      success: true,
+      data: {
+        auctionData,
+      },
     });
   } catch (error) {
     next(error);
