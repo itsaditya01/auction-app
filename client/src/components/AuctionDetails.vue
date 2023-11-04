@@ -2,15 +2,25 @@
   <div id="auctionDetails">
     <div class="text-center image-container">
       <v-img
-        v-if="!auction.itemPhoto"
+        v-if="!auction.fileUrl"
         cover
         height="450"
         src="https://cdn.vuetifyjs.com/images/cards/cooking.png"
       ></v-img>
 
-      <img v-if="image" style="max-width: 100%; height: 450px" :src="image" />
       <img
-        v-if="!isLive"
+        v-if="!isVideo"
+        style="max-width: 100%; height: 450px"
+        :src="auction.fileUrl"
+      />
+      <video
+        v-else
+        :src="auction.fileUrl"
+        style="max-width: 100%; height: 450px"
+        autoplay
+      ></video>
+      <img
+        v-if="!isLive && !isUpcoming"
         :src="require('../assets/sold_image.png')"
         class="sold-image"
       />
@@ -56,15 +66,10 @@
 
 <script>
 export default {
-  data() {
-    return {
-      image: null,
-    };
-  },
   created() {
     console.log(this.isLive);
   },
-  props: ["auction", "image", "isLive", "startTime", "endTime"],
+  props: ["auction", "isLive", "startTime", "endTime", "isVideo", "isUpcoming"],
 };
 </script>
 

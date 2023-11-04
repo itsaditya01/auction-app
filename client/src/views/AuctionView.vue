@@ -5,10 +5,11 @@
     </v-col>
     <v-col cols="5">
       <auction-details
+        :isVideo="isVideo"
         :auction="auction"
         :startTime="startTime"
+        :isUpcoming="isUpcoming"
         :endTime="endTime"
-        :image="image"
         :isLive="isLive"
       ></auction-details>
     </v-col>
@@ -42,7 +43,6 @@ export default {
       bids: [],
       auction: {},
       users: [],
-      image: null,
       isLive: false,
       startingBid: null,
       highestBid: null,
@@ -50,6 +50,8 @@ export default {
       timeoutFn: null,
       startTime: null,
       endTime: null,
+      isvideo: false,
+      isUpcoming: false,
     };
   },
   created() {
@@ -110,7 +112,9 @@ export default {
         if (result.data.success) {
           this.users = result.data.data.usersList;
         }
-      });
+      }).catch((error) => {
+          this.$toast.error(error.response?.data?.msg || error.message);
+        });;
     },
     arrayBufferToBase64(buffer) {
       let binary = "";
@@ -142,19 +146,17 @@ export default {
             this.startingBid = this.auction.startingPrice;
             this.startTime = result.data.data.startTime;
             this.endTime = result.data.data.endTime;
-            // console.log(this.auction.addedBy === this.$cookies.get('id'));
+
             if (this.auction.addedBy === this.$cookies.get("id")) {
               this.isOwner = true;
-              console.log(this.isOwner);
             }
 
-            if (this.auction.itemPhoto) {
-              var base64Flag =
-                "data:" + this.auction.itemPhoto.contentType + ";base64,";
-              var imageStr = this.arrayBufferToBase64(
-                this.auction.itemPhoto.data.data
-              );
-              this.image = base64Flag + imageStr;
+            if (
+              this.auction.fileUrl.slice(
+                ((this.auction.fileUrl.lastIndexOf(".") - 1) >>> 0) + 2
+              ) === "mp4"
+            ) {
+              this.isVideo = true;
             }
 
             const currDate = new Date();
@@ -165,6 +167,7 @@ export default {
               const timestamp = endTime.getTime() - currDate.getTime();
               socket.connect();
               this.isLive = true;
+
               this.timeoutFn = setTimeout(() => {
                 socket.disconnect();
                 this.isLive = false;
@@ -174,6 +177,7 @@ export default {
                 }
               }, timestamp);
             } else if (currDate < startTime) {
+              this.isUpcoming = true;
               this.$toast.warning("Auction will be live soon");
             } else {
               this.$toast.warning("Auction has been ended");

@@ -11,6 +11,10 @@ const auctionSchema = new Schema(
       data: Buffer,
       contentType: String,
     },
+    fileUrl: {
+      type: String,
+      required: true,
+    },
     itemDescription: {
       type: String,
       required: true,

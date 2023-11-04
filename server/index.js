@@ -5,12 +5,15 @@ const { connectToMongo } = require("./src/database/connection");
 const errorhandler = require("./src/utils/errorHandler");
 const morgan = require("morgan");
 const cors = require("cors");
+const path = require('path')
+
 const socketConnection = require("./src/socket/socketConfig");
 const scheduleAuctionTasks = require("./src/helpers/cron");
 
 const server = http.createServer(app);
 //middlewares
 app.use(express.json());
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 

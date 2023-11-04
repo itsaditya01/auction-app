@@ -53,13 +53,17 @@ exports.createAuction = async (req, res, next) => {
       startingPrice,
       startTime,
       endTime,
-      itemPhoto: {
-        data: fs.readFileSync(
-          path.join(process.cwd() + "/uploads/" + req.file.filename)
-        ),
-        contentType: req.file.mimetype,
-      },
+      fileUrl: `${req.protocol}://${req.get("host")}/uploads/${
+        req.file.filename
+      }`,
+      // itemPhoto: {
+      //   data: fs.readFileSync(
+      //     path.join(process.cwd() + "/uploads/" + req.file.filename)
+      //   ),
+      //   contentType: req.file.mimetype,
+      // },
     };
+
     const auction = await addAuction({ ...obj, addedBy: req.user });
     await session.commitTransaction();
 

@@ -10,13 +10,24 @@
     </template>
 
     <v-img
-      v-if="!auction.itemPhoto"
+      v-if="!auction.fileUrl"
       cover
       height="250"
       src="https://cdn.vuetifyjs.com/images/cards/cooking.png"
     ></v-img>
 
-    <img v-if="auction.itemPhoto" height="250" :src="image" />
+    <img
+      v-if="auction.fileUrl && !isVideo"
+      height="250"
+      :src="auction.fileUrl"
+    />
+
+    <video
+      v-if="auction.fileUrl && isVideo"
+      height="250"
+      :src="auction.fileUrl"
+      autoplay
+    ></video>
 
     <v-card-item>
       <v-card-title>{{ auction.itemName }}</v-card-title>
@@ -68,9 +79,19 @@ export default {
     loading: false,
     selection: 1,
     image: null,
+    isVideo: false,
   }),
   props: ["auction"],
   created() {
+    if (
+      this.auction.fileUrl &&
+      this.auction.fileUrl.slice(
+        ((this.auction.fileUrl.lastIndexOf(".") - 1) >>> 0) + 2
+      ) === "mp4"
+    ) {
+      this.isVideo = true;
+    }
+
     if (this.auction.itemPhoto) {
       var base64Flag =
         "data:" + this.auction.itemPhoto.contentType + ";base64,";

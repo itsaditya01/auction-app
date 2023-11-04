@@ -1,13 +1,23 @@
 <template>
   <v-card class="main-card" width="344">
     <v-img
-      v-if="!item.itemPhoto"
+      v-if="!item.fileUrl"
       src="https://cdn.vuetifyjs.com/images/cards/sunshine.jpg"
       height="200px"
       cover
     ></v-img>
 
-    <img v-if="item.itemPhoto" height="200" :src="image" />
+    <img
+      v-if="item.fileUrl && !isVideo"
+      height="200"
+      style="background-size: cover"
+      :src="item.fileUrl"
+    />
+    <video
+      v-if="item.fileUrl && isVideo"
+      height="200"
+      :src="item.fileUrl"
+    ></video>
 
     <v-card-title> {{ item.itemName }} </v-card-title>
 
@@ -45,23 +55,18 @@
 export default {
   data: () => ({
     show: false,
-    image: null,
+    isVideo: false,
   }),
   props: ["item"],
   created() {
-    if (this.item.itemPhoto) {
-      var base64Flag = "data:" + this.item.itemPhoto.contentType + ";base64,";
-      var imageStr = this.arrayBufferToBase64(this.item.itemPhoto.data.data);
-      this.image = base64Flag + imageStr;
+    if (
+      this.item.fileUrl &&
+      this.item.fileUrl.slice(
+        ((this.item.fileUrl.lastIndexOf(".") - 1) >>> 0) + 2
+      ) === "mp4"
+    ) {
+      this.isVideo = true;
     }
-  },
-  methods: {
-    arrayBufferToBase64(buffer) {
-      var binary = "";
-      var bytes = [].slice.call(new Uint8Array(buffer));
-      bytes.forEach((b) => (binary += String.fromCharCode(b)));
-      return window.btoa(binary);
-    },
   },
 };
 </script>

@@ -3,7 +3,8 @@ const Auction = require("../auction/auctionModel");
 const { updateBuyerInAuction } = require("../bidding/bidService");
 
 function scheduleAuctionTasks() {
-  cron.schedule("*/10 * * * * *", async () => {
+  //Called on every minute
+  cron.schedule("* * * * *", async () => {
     const currentTime = new Date(); // Get the current time
 
     const auctionsToUpdate = await Auction.find({
